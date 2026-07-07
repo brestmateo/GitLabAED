@@ -68,7 +68,8 @@ def mostrar_menu():
     print("1. Ver Cursos")
     print("2. Registrar Estudiante")
     print("3. Inscribir Estudiante")
-    print("4. Salir")
+    print("4. Ver Estadísticas")
+    print("5. Salir")
     return input("Seleccione una opción: ")
 
 # Bloque principal
@@ -87,6 +88,8 @@ def main():
         elif opcion == "3":
             inscribir_estudiante()
         elif opcion == "4":
+            mostrar_estadisticas()
+        elif opcion == "5":
             print("Saliendo del sistema...")
             ejecutando = False
         else:
@@ -134,7 +137,35 @@ def inscribir_estudiante():
     # Guardamos los cambios en cursos.txt (reescribimos todo el archivo)
     with open("cursos.txt", "w") as f:
         for c in cursos:
-            f.write(f"{c[0]},{c[1]},{c[2]},{c[3]}\n")            
+            f.write(f"{c[0]},{c[1]},{c[2]},{c[3]}\n")      
+def mostrar_estadisticas():
+    """Calcula y muestra estadísticas de inscriptos."""
+    print("\n--- ESTADÍSTICAS DEL SISTEMA ---")
+    cursos = obtener_cursos()
+    
+    if not cursos:
+        print("No hay cursos para analizar.")
+        return
+
+    # Variables para control de alta demanda
+    max_inscriptos = -1
+    curso_estrella = ""
+    
+    print("Reporte de Inscriptos:")
+    for curso in cursos:
+        nombre = curso[1]
+        inscriptos = int(curso[3])
+        print(f"- {nombre}: {inscriptos} inscriptos.")
+        
+        # Lógica de acumulador/comparación para hallar el máximo
+        if inscriptos > max_inscriptos:
+            max_inscriptos = inscriptos
+            curso_estrella = nombre
+            
+    if max_inscriptos > 0:
+        print(f"\nCurso con mayor demanda: {curso_estrella} ({max_inscriptos} inscriptos)")
+    else:
+        print("\nAún no hay inscriptos en ningún curso.")          
 
 if __name__ == "__main__":
     main()
