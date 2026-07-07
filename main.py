@@ -67,7 +67,8 @@ def mostrar_menu():
     print("\n--- SISTEMA DE INSCRIPCIÓN ---")
     print("1. Ver Cursos")
     print("2. Registrar Estudiante")
-    print("3. Salir")
+    print("3. Inscribir Estudiante")
+    print("4. Salir")
     return input("Seleccione una opción: ")
 
 # Bloque principal
@@ -84,10 +85,56 @@ def main():
         elif opcion == "2":
             registrar_estudiante()
         elif opcion == "3":
+            inscribir_estudiante()
+        elif opcion == "4":
             print("Saliendo del sistema...")
             ejecutando = False
         else:
             print("Opción no válida, intente de nuevo.")
+def obtener_cursos():
+    """Retorna una lista de cursos cargados desde el archivo."""
+    cursos = []
+    if os.path.exists("cursos.txt"):
+        with open("cursos.txt", "r") as f:
+            for linea in f:
+                cursos.append(linea.strip().split(","))
+    return cursos
+
+def inscribir_estudiante():
+    """Lógica para inscribir a un estudiante en un curso."""
+    print("\n--- INSCRIPCIÓN A CURSO ---")
+    dni = input("Ingrese el DNI del estudiante: ")
+    id_curso = input("Ingrese el ID del curso: ")
+    
+    cursos = obtener_cursos()
+    curso_encontrado = False
+    
+    # Buscamos el curso
+    for curso in cursos:
+        if curso[0] == id_curso:
+            curso_encontrado = True
+            cupo_total = int(curso[2])
+            cupo_actual = int(curso[3])
+            
+            if cupo_actual < cupo_total:
+                # Inscribimos: Guardamos en inscripciones.txt
+                with open("inscripciones.txt", "a") as f:
+                    f.write(f"{dni},{id_curso},Inscripto\n")
+                
+                # Actualizamos cupo actual (esto requiere reescribir el archivo)
+                curso[3] = str(cupo_actual + 1)
+                print(f"Inscripción exitosa en {curso[1]}.")
+            else:
+                print("Lo siento, el curso está lleno.")
+            break
+            
+    if not curso_encontrado:
+        print("Curso no encontrado.")
+
+    # Guardamos los cambios en cursos.txt (reescribimos todo el archivo)
+    with open("cursos.txt", "w") as f:
+        for c in cursos:
+            f.write(f"{c[0]},{c[1]},{c[2]},{c[3]}\n")            
 
 if __name__ == "__main__":
     main()
