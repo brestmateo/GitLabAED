@@ -2,5 +2,5 @@
 102,Lógica y Algoritmos,15,0
 103,Análisis Matemático I,30,0
 104,Ingeniería y Sociedad,25,0
-105,Inglés Avanzado,20,1
+105,Inglés Avanzado,20,2
 106,Arquitectura de Computadoras,25,0

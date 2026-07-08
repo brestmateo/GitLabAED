@@ -88,7 +88,8 @@ def listar_cursos():
                 # Estructura repetitiva para recorrer las líneas
                 for linea in lineas:
                     datos = linea.strip().split(",")
-                    print(f"{datos[0]} | {datos[1]} | {datos[2]} | {datos[3]}")
+                    if len(datos) == 4:
+                        print(f"{datos[0]} | {datos[1]} | {datos[2]} | {datos[3]}")
                     
     except FileNotFoundError:
         print("¡Error crítico!: El archivo de cursos no se encuentra.")
@@ -177,6 +178,64 @@ def inscribir_estudiante():
             for c in cursos:
                 f.write(f"{c[0]},{c[1]},{c[2]},{c[3]}\n")      
 
+def dar_de_baja_inscripcion():
+    """Elimina la inscripción de un estudiante a un curso y libera el cupo."""
+    print("\n--- DAR DE BAJA UNA INSCRIPCIÓN ---")
+    
+    if not os.path.exists("inscripciones.txt"):
+        print("¡Alerta! No hay inscripciones registradas en el sistema.")
+        return
+
+    # Validación del DNI
+    dni = input("Ingrese el DNI del estudiante a dar de baja (8 números): ")
+    while len(dni) != 8 or not dni.isdigit():
+        print("¡Error! El DNI debe contener exactamente 8 caracteres numéricos.")
+        dni = input("Ingrese el DNI del estudiante a dar de baja (8 números): ")
+
+    # Validación del ID del curso
+    id_curso = input("Ingrese el ID del curso: ")
+    while len(id_curso) == 0:
+        print("¡Error! El ID del curso no puede estar vacío.")
+        id_curso = input("Ingrese el ID del curso: ")
+
+    # 1. Leer las inscripciones y buscar si existe la que queremos borrar
+    inscripciones_actualizadas = []
+    inscripcion_encontrada = False
+    
+    with open("inscripciones.txt", "r") as f:
+        for linea in f:
+            datos = linea.strip().split(",")
+            # Si coincide DNI y Curso, la marcamos como encontrada y NO la guardamos en la nueva lista
+            if len(datos) >= 2 and datos[0] == dni and datos[1] == id_curso:
+                inscripcion_encontrada = True
+            else:
+                # Las que NO coinciden se guardan para reescribirlas luego
+                inscripciones_actualizadas.append(linea)
+    
+    if not inscripcion_encontrada:
+        print("¡Alerta! No se encontró una inscripción para ese DNI en ese curso.")
+        return
+
+    # 2. Sobrescribir el archivo de inscripciones con la lista actualizada (sin el alumno)
+    with open("inscripciones.txt", "w") as f:
+        for inscripcion in inscripciones_actualizadas:
+            f.write(inscripcion)
+
+    # 3. Actualizar el cupo en cursos.txt (restar 1)
+    cursos = obtener_cursos()
+    for curso in cursos:
+        if curso[0] == id_curso:
+            cupo_actual = int(curso[3])
+            if cupo_actual > 0:
+                curso[3] = str(cupo_actual - 1)
+            break
+            
+    with open("cursos.txt", "w") as f:
+        for c in cursos:
+            f.write(f"{c[0]},{c[1]},{c[2]},{c[3]}\n")
+
+    print("¡Baja realizada con éxito! Se ha eliminado la inscripción y liberado el cupo en el curso.")
+
 def mostrar_estadisticas():
     """Calcula y muestra estadísticas de inscriptos."""
     print("\n--- ESTADÍSTICAS DEL SISTEMA ---")
@@ -191,14 +250,15 @@ def mostrar_estadisticas():
     
     print("Reporte de Inscriptos:")
     for curso in cursos:
-        nombre = curso[1]
-        inscriptos = int(curso[3])
-        print(f"- {nombre}: {inscriptos} inscriptos.")
-        
-        # Lógica de acumulador/comparación para hallar el máximo
-        if inscriptos > max_inscriptos:
-            max_inscriptos = inscriptos
-            curso_estrella = nombre
+        if len(curso) == 4:
+            nombre = curso[1]
+            inscriptos = int(curso[3])
+            print(f"- {nombre}: {inscriptos} inscriptos.")
+            
+            # Lógica de acumulador/comparación para hallar el máximo
+            if inscriptos > max_inscriptos:
+                max_inscriptos = inscriptos
+                curso_estrella = nombre
             
     if max_inscriptos > 0:
         print(f"\nCurso con mayor demanda: {curso_estrella} ({max_inscriptos} inscriptos)")
@@ -249,7 +309,8 @@ def mostrar_menu():
     print("3. Inscribir Estudiante")
     print("4. Ver Estadísticas")
     print("5. Ver Inscriptos por Curso")
-    print("6. Salir")
+    print("6. Dar de Baja Inscripción")
+    print("7. Salir")
     return input("Seleccione una opción: ")
 
 # Bloque principal
@@ -272,10 +333,12 @@ def main():
         elif opcion == "5":
             ver_estudiantes_por_curso()
         elif opcion == "6":
+            dar_de_baja_inscripcion()
+        elif opcion == "7":
             print("Saliendo del sistema...")
             ejecutando = False
         else:
-            print("¡Error! Opción no válida, intente de nuevo con un número del 1 al 6.")
+            print("¡Error! Opción no válida, intente de nuevo con un número del 1 al 7.")
 
 if __name__ == "__main__":
     main()
