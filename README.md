@@ -1,7 +1,7 @@
-INTEGRANTES DEL GRUPO:
-Arianna Salome Fernandez. Legajo:
-Brogini Tiago. Legajo:
-Brest Abib Mateo. Legajo: 30663
+INTEGRANTES DEL GRUPO D10:
+Arianna Salome Fernandez.
+Brogini Tiago. 
+Brest Abib Mateo. 
 
 COMISIÓN: D (K1.4)
 
