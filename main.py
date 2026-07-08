@@ -69,7 +69,8 @@ def mostrar_menu():
     print("2. Registrar Estudiante")
     print("3. Inscribir Estudiante")
     print("4. Ver Estadísticas")
-    print("5. Salir")
+    print("5. Ver Inscriptos")
+    print("6. Salir")
     return input("Seleccione una opción: ")
 
 # Bloque principal
@@ -90,6 +91,8 @@ def main():
         elif opcion == "4":
             mostrar_estadisticas()
         elif opcion == "5":
+            ver_estudiantes_por_curso()
+        elif opcion == "6":
             print("Saliendo del sistema...")
             ejecutando = False
         else:
@@ -165,7 +168,38 @@ def mostrar_estadisticas():
     if max_inscriptos > 0:
         print(f"\nCurso con mayor demanda: {curso_estrella} ({max_inscriptos} inscriptos)")
     else:
-        print("\nAún no hay inscriptos en ningún curso.")          
+        print("\nAún no hay inscriptos en ningún curso.") 
+def ver_estudiantes_por_curso():
+    """Muestra los estudiantes inscriptos en cada curso."""
+    print("\n--- LISTADO DE INSCRIPTO POR CURSO ---")
+    
+    # 1. Cargamos todos los estudiantes en un diccionario para acceso rápido
+    estudiantes = {}
+    if os.path.exists("estudiantes.txt"):
+        with open("estudiantes.txt", "r") as f:
+            for linea in f:
+                datos = linea.strip().split(",")
+                # Estructura: {dni: "Nombre Apellido"}
+                estudiantes[datos[0]] = f"{datos[1]} {datos[2]}"
+    
+    # 2. Leemos las inscripciones
+    if not os.path.exists("inscripciones.txt"):
+        print("No hay inscripciones registradas.")
+        return
+
+    # 3. Mostramos la info cruzada
+    with open("inscripciones.txt", "r") as f:
+        inscripciones = f.readlines()
+        
+    if not inscripciones:
+        print("No hay alumnos inscriptos aún.")
+        return
+
+    # Usamos un bucle para procesar cada inscripción
+    for linea in inscripciones:
+        dni, id_curso, estado = linea.strip().split(",")
+        nombre_alumno = estudiantes.get(dni, "Desconocido")
+        print(f"Curso ID: {id_curso} | Estudiante: {nombre_alumno} (DNI: {dni})")         
 
 if __name__ == "__main__":
     main()
