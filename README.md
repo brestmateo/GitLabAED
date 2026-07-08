@@ -24,8 +24,4 @@ Para la construcción de este proyecto se utilizó Gemini (Inteligencia Artifici
 Definición: Colaboración en cuanto a ideas de menú y cuerpo del programa.
 Estructuración: Asistencia en el diseño de la arquitectura modular del código y la lógica de persistencia en archivos.
 Depuración: Soporte en la identificación de errores lógicos y validación de sintaxis bajo los estándares de Python.
-<<<<<<< HEAD
 Metodología: El equipo de desarrollo realizó una revisión crítica de cada fragmento de código generado por la IA, adaptándolo para asegurar el cumplimiento estricto de las rúbricas y el material de estudio de la cátedra.
-=======
-Metodología: El equipo de desarrollo realizó una revisión crítica de cada fragmento de código generado por la IA, adaptándolo para asegurar el cumplimiento estricto de las rúbricas y el material de estudio de la cátedra.
->>>>>>> 96cfa881e89165371c2f3615ee8fa1f58a75a74c
