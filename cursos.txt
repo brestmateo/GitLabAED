@@ -1,0 +1,6 @@
+101,Python para Sistemas de Información,20,0
+102,Lógica y Algoritmos,15,0
+103,Análisis Matemático I,30,0
+104,Ingeniería y Sociedad,25,0
+105,Inglés Avanzado,20,1
+106,Arquitectura de Computadoras,25,0
